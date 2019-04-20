@@ -49,11 +49,18 @@ int main() {
     map_waypoints_dx.push_back(d_x);
     map_waypoints_dy.push_back(d_y);
   }
-
-  h.onMessage([&map_waypoints_x,&map_waypoints_y,&map_waypoints_s,
-               &map_waypoints_dx,&map_waypoints_dy]
-              (uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length,
-               uWS::OpCode opCode) {
+#ifdef UWS_VCPKG
+  h.onMessage([&map_waypoints_x, &map_waypoints_y, &map_waypoints_s,
+	  &map_waypoints_dx, &map_waypoints_dy]
+	  (uWS::WebSocket<uWS::SERVER>* ws, char *data, size_t length,
+		  uWS::OpCode opCode)
+#else
+  h.onMessage([&map_waypoints_x, &map_waypoints_y, &map_waypoints_s,
+	  &map_waypoints_dx, &map_waypoints_dy]
+	  (uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length,
+		  uWS::OpCode opCode)
+#endif
+ {
     // "42" at the start of the message means there's a websocket message event.
     // The 4 signifies a websocket message
     // The 2 signifies a websocket event
@@ -103,29 +110,58 @@ int main() {
           msgJson["next_y"] = next_y_vals;
 
           auto msg = "42[\"control\","+ msgJson.dump()+"]";
-
-          ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT);
+#ifdef UWS_VCPKG
+		  ws->send(msg.data(), msg.length(), uWS::OpCode::TEXT);
+#else
+		  ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT);
+#endif
+          
         }  // end "telemetry" if
       } else {
         // Manual driving
         std::string msg = "42[\"manual\",{}]";
-        ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT);
+#ifdef UWS_VCPKG
+		ws->send(msg.data(), msg.length(), uWS::OpCode::TEXT);
+#else
+		ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT);
+#endif
+        
       }
     }  // end websocket if
   }); // end h.onMessage
-
-  h.onConnection([&h](uWS::WebSocket<uWS::SERVER> ws, uWS::HttpRequest req) {
+#ifdef UWS_VCPKG
+  h.onConnection([&h](uWS::WebSocket<uWS::SERVER>* ws, uWS::HttpRequest req)
+#else
+  h.onConnection([&h](uWS::WebSocket<uWS::SERVER> ws, uWS::HttpRequest req)
+#endif
+  {
     std::cout << "Connected!!!" << std::endl;
   });
-
+#ifdef UWS_VCPKG
+  h.onDisconnection([&h](uWS::WebSocket<uWS::SERVER>* ws, int code,
+                         char *message, size_t length)
+#else
   h.onDisconnection([&h](uWS::WebSocket<uWS::SERVER> ws, int code,
-                         char *message, size_t length) {
-    ws.close();
+	  char *message, size_t length)
+#endif
+  {
+#ifdef UWS_VCPKG
+	  ws->close();
+#else
+	  ws.close();
+#endif
+    
     std::cout << "Disconnected" << std::endl;
   });
-
+#ifdef UWS_VCPKG
   int port = 4567;
-  if (h.listen(port)) {
+  auto host = "127.0.0.1";
+  if (h.listen(host, port))
+#else
+  int port = 4567;
+  if (h.listen(port))
+#endif
+   {
     std::cout << "Listening to port " << port << std::endl;
   } else {
     std::cerr << "Failed to listen to port" << std::endl;
