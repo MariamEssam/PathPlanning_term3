@@ -18,17 +18,10 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\src\helpers.h" />
-    <ClInclude Include="..\..\src\json.hpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\..\src\main.cpp" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{FB33BCC0-F790-4701-AB76-95F418196CA7}</ProjectGuid>
+    <ProjectGuid>{18375FD6-E1D0-4B1E-A90C-60F56F3C05F1}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>PathPlannig</RootNamespace>
+    <RootNamespace>PathPlanning</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -124,7 +117,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;UWS_VCPKG;_USE_MATH_DEFINES;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
@@ -152,6 +145,26 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\constant.cpp" />
+    <ClCompile Include="..\src\cost.cpp" />
+    <ClCompile Include="..\src\main.cpp" />
+    <ClCompile Include="..\src\PathPlanningManager.cpp" />
+    <ClCompile Include="..\src\PlannerFSM.cpp" />
+    <ClCompile Include="..\src\trajectory.cpp" />
+    <ClCompile Include="..\src\Vehicle.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\constant.h" />
+    <ClInclude Include="..\src\cost.h" />
+    <ClInclude Include="..\src\Helper.h" />
+    <ClInclude Include="..\src\json.hpp" />
+    <ClInclude Include="..\src\PathPlanningManager.h" />
+    <ClInclude Include="..\src\PlannerFSM.h" />
+    <ClInclude Include="..\src\spline.h" />
+    <ClInclude Include="..\src\trajectory.h" />
+    <ClInclude Include="..\src\Vehicle.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

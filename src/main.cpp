@@ -1,3 +1,4 @@
+#pragma once
 #include <uWS/uWS.h>
 #include <fstream>
 #include <iostream>
@@ -5,8 +6,9 @@
 #include <vector>
 #include "Eigen-3.3/Eigen/Core"
 #include "Eigen-3.3/Eigen/QR"
-#include "helpers.h"
 #include "json.hpp"
+#include "PathPlanningManager.h"
+#include "Helper.h"
 
 // for convenience
 using nlohmann::json;
@@ -15,18 +17,16 @@ using std::vector;
 
 int main() {
   uWS::Hub h;
-
   // Load up map values for waypoint's x,y,s and d normalized normal vectors
   vector<double> map_waypoints_x;
   vector<double> map_waypoints_y;
   vector<double> map_waypoints_s;
   vector<double> map_waypoints_dx;
   vector<double> map_waypoints_dy;
+  
 
   // Waypoint map to read from
   string map_file_ = "../data/highway_map.csv";
-  // The max s value before wrapping around the track back to 0
-  double max_s = 6945.554;
 
   std::ifstream in_map_(map_file_.c_str(), std::ifstream::in);
 
@@ -49,9 +49,11 @@ int main() {
     map_waypoints_dx.push_back(d_x);
     map_waypoints_dy.push_back(d_y);
   }
+  //Manage all the path planning functionlity
+  PathPlanningManager manager = PathPlanningManager(map_waypoints_x, map_waypoints_y, map_waypoints_s, map_waypoints_dx, map_waypoints_dy);
 #ifdef UWS_VCPKG
   h.onMessage([&map_waypoints_x, &map_waypoints_y, &map_waypoints_s,
-	  &map_waypoints_dx, &map_waypoints_dy]
+	  &map_waypoints_dx, &map_waypoints_dy,&manager]
 	  (uWS::WebSocket<uWS::SERVER>* ws, char *data, size_t length,
 		  uWS::OpCode opCode)
 #else
@@ -61,12 +63,13 @@ int main() {
 		  uWS::OpCode opCode)
 #endif
  {
+	  Helper helper;
     // "42" at the start of the message means there's a websocket message event.
     // The 4 signifies a websocket message
     // The 2 signifies a websocket event
     if (length && length > 2 && data[0] == '4' && data[1] == '2') {
-
-      auto s = hasData(data);
+	  
+      auto s = helper.hasData(data);
 
       if (s != "") {
         auto j = json::parse(s);
@@ -99,15 +102,25 @@ int main() {
 
           vector<double> next_x_vals;
           vector<double> next_y_vals;
+		  double last_s = car_s;
 
-          /**
-           * TODO: define a path made up of (x,y) points that the car will visit
-           *   sequentially every .02 seconds
-           */
+		  int prev_size = previous_path_x.size();
 
-
-          msgJson["next_x"] = next_x_vals;
-          msgJson["next_y"] = next_y_vals;
+		  if (prev_size > 0) {
+			  last_s = end_path_s;
+		  }
+		  manager.updatewatchinglist(sensor_fusion);
+		  manager.update_auto_car_state(last_s, car_x, car_y, car_yaw, car_s, car_d, car_speed);
+		  manager.generatePath(previous_path_x, previous_path_y);
+		/*  double dist_inc = 0.5;
+		  for (int i = 0; i < 50; ++i) {
+			  next_x_vals.push_back(car_x + (dist_inc*i)*cos(car_yaw* M_PI / 180));
+			  next_y_vals.push_back(car_y + (dist_inc*i)*sin(car_yaw* M_PI / 180));
+		  }*/
+		 /* msgJson["next_x"] = next_x_vals;
+		  msgJson["next_y"] = next_y_vals;*/
+		  msgJson["next_x"] = manager.get_x_values();
+		  msgJson["next_y"] = manager.get_y_values();
 
           auto msg = "42[\"control\","+ msgJson.dump()+"]";
 #ifdef UWS_VCPKG
