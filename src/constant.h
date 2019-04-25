@@ -1,5 +1,6 @@
-#pragma once
-
+//#pragma once
+#ifndef CONSTANT_H
+#define CONSTANT_H
 class constant
 {
 public:
@@ -22,4 +23,5 @@ public:
 	double static MIDDLE_LANE;
 	double static INTERVAL;
 };
+#endif
 

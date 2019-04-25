@@ -1,4 +1,5 @@
-#pragma once
+#ifndef PATHPLANNINGMANAGER_H
+#define PATHPLANNINGMANAGER_H
 #include "constant.h"
 #include <vector>
 #include "Vehicle.h"
@@ -38,4 +39,4 @@ private:
 	vector<double> map_waypoints_dy;
 	trajectory traject;
 };
-
+#endif

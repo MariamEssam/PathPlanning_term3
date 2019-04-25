@@ -1,4 +1,5 @@
-#pragma once
+#ifndef PLANNERFSM_H
+#define PLANNERFSM_H
 #include "Vehicle.h"
 #include "constant.h"
 #include <map>
@@ -37,4 +38,4 @@ private:
 	vector<double> map_waypoints_dx;
 	vector<double> map_waypoints_dy;
 };
-
+#endif

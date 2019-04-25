@@ -1,4 +1,6 @@
-#pragma once
+//#pragma once
+#ifndef VEHICLE_H
+#define VEHICLE_H
 #include "constant.h"
 #include <math.h>
 #include <vector>
@@ -103,3 +105,4 @@ struct snapshot {
 			<< " lane " << lane << endl;
 	}*/
 };
+#endif

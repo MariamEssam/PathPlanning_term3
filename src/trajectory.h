@@ -1,4 +1,6 @@
-#pragma once
+//#pragma once
+#ifndef TRAJECTORY_H
+#define TRAJECTORY_H
 #include <algorithm>
 #include <vector>
 #include "spline.h"
@@ -35,4 +37,4 @@ private:
 	vector<double> map_waypoints_dx;
 	vector<double> map_waypoints_dy;
 };
-
+#endif

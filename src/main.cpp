@@ -1,4 +1,3 @@
-#pragma once
 #include <uWS/uWS.h>
 #include <fstream>
 #include <iostream>

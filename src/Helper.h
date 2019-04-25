@@ -1,4 +1,5 @@
-#pragma once
+#ifndef HELPER_H
+#define HELPER_H
 #include <algorithm>
 #include <math.h>
 #include <string>
@@ -161,3 +162,4 @@ public:
 
 };
 
+#endif

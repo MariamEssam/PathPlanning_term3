@@ -1,4 +1,6 @@
-#pragma once
+//#pragma once
+#ifndef COST_INCLUDED
+#define COST_INCLUDED
 #include "PlannerFSM.h"
 #include <functional>
 #include <iostream>
@@ -76,4 +78,4 @@ public:
 	map<int, vector<prediction>> filter_predictions_by_lane(
 		map<int, vector<prediction>> predictions, int lane);
 };
-
+#endif
